@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">RZD assistant</string>
+    <string name="dialog_title_start_chet">Начало пути</string>
+    <string name="dialog_title_start_nechet">Начало пути</string>
+    <string name="dialog_button_start_chet">Готово</string>
+    <string name="dialog_button_start_nechet">Готово</string>
+    <string name="tv_distance_chet">0</string>
+    <string name="tv_distance_nechet">0</string>
+    <string name="tv_velocity_chet">0</string>
+    <string name="tv_velocity_nechet">0</string>
+    <string name="tv_km_chet">км/ч</string>
+    <string name="tv_km_nechet">км/ч</string>
+    <string name="tv_start_chet">Отправление с чётным</string>
+    <string name="tv_start_nechet">Отправление с нечётным</string>
+    <string name="button_actitivity_nechet">Следовать с нечётным</string>
+    <string name="button_actitivity_chet">Следовать с чётным</string>
+    <string name="ed_start_chet">Введите км. начало пути</string>
+    <string name="ed_start_nechet">Введите км. начало пути</string>
+    <string name="tvt_title_chet">Километр</string>
+    <string name="tvt_speed_chet">Скорость</string>
+    <string name="tvt_title_nechet">Километр</string>
+    <string name="tvt_speed_nechet">Скорость</string>
+    <string name="text_empty">Вы не ввели значение</string>
+    <string name="saved">Сохранено</string>
+    <string name="edit_title_chet">Начало ограничения</string>
+    <string name="edit_title_finish_chet">Конец ограничения</string>
+    <string name="edit_speed_chet">км/ч</string>
+    <string name="edit_title_nechet">Начало ограничения</string>
+    <string name="edit_title_finish_nechet">Конец ограничение</string>
+    <string name="edit_speed_nechet">км/ч</string>
+
+    <string name="dialog_title_usl_chet">Условная длина</string>
+    <string name="ed_usl_chet">Введите усл. дл.</string>
+    <string name="dialog_button_usl_chet">Готово</string>
+    <string name="hint_usl_chet">Ввести</string>
+    <string name="text_usl_chet">Усл. дл.</string>
+
+    <string name="dialog_title_usl_nechet">Условная длина</string>
+    <string name="ed_usl_nechet">Введите усл. дл.</string>
+    <string name="dialog_button_usl_nechet">Готово</string>
+    <string name="hint_usl_nechet">Ввести</string>
+    <string name="text_usl_nechet">Усл. дл.</string>
+</resources>
