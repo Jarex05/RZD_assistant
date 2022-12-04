@@ -452,7 +452,7 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
         tvUslChet.setText(uslChet);
         uslDlChet = Integer.parseInt(uslChet);
     }
-    //123
+    //1234
 
     private <ConstrainLayout> void showDialogUslChet()
     {
