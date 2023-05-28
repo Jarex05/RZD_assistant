@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
 
     DBHelper dbHelper;
 
-    private MediaPlayer ogr15, ogr25, ogr40, ogr50, ogr55, ogr60, ogr65, ogr70, ogr75, probatormozov, probatormozov2, ojevlenie, voice15, voice25, voice40, voice50, voice55, voice60, voice65, voice70, voice75, voiceprev, tokopriemniki, tokopriemniki2;
+    private MediaPlayer ogr15, ogr25, ogr40, ogr50, ogr55, ogr60, ogr65, ogr70, ogr75, probatormozov, probatormozov2, ojevlenie, voice15, voice25, voice40, voice50, voice55, voice60, voice65, voice70, voice75, voiceprev, tokopriemniki, tokopriemniki2, songvipolneno;
 
     public MainActivity() {
     }
@@ -145,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
         ogr70 = MediaPlayer.create(this, R.raw.ogr70);
         ogr75 = MediaPlayer.create(this, R.raw.ogr75);
         ojevlenie = MediaPlayer.create(this, R.raw.ojevlenie);
+        songvipolneno = MediaPlayer.create(this, R.raw.songvipolneno);
 
         pb = findViewById(R.id.progressBarChet);
         pb.setMax(0);
@@ -878,6 +879,9 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
                                 tvSpeedChet.setText("");
                                 tvInfoChet.setText("");
                                 tvInfoChet.setText(titleChet + " " + piketstartChet + " -- " + title_finishChet + " " + piketfinishChet + " => " + speedChet + " Выполнено!");
+                                if (start_distance_chet >= (faktEndKm + sumCalculateUslChet) && start_distance_chet <= (faktEndKm + 35 + sumCalculateUslChet) && speedChet == 15) {
+                                    soundPlay(songvipolneno);
+                                }
                             }
                             else if (start_distance_chet >= (faktEndKm + sumCalculateUslChet) && start_distance_chet <= (faktEndKm + 80 + sumCalculateUslChet) && speedChet == 25) {
                                 tvNameChet.setText("");
@@ -885,6 +889,9 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
                                 tvSpeedChet.setText("");
                                 tvInfoChet.setText("");
                                 tvInfoChet.setText(titleChet + " " + piketstartChet + " -- " + title_finishChet + " " + piketfinishChet + " => " + speedChet + " Выполнено!");
+                                if (start_distance_chet >= (faktEndKm + sumCalculateUslChet) && start_distance_chet <= (faktEndKm + 35 + sumCalculateUslChet) && speedChet == 25) {
+                                    soundPlay(songvipolneno);
+                                }
                             }
                             else if (start_distance_chet >= (faktEndKm + sumCalculateUslChet) && start_distance_chet <= (faktEndKm + 80 + sumCalculateUslChet) && speedChet == 40) {
                                 tvNameChet.setText("");
@@ -892,13 +899,20 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
                                 tvSpeedChet.setText("");
                                 tvInfoChet.setText("");
                                 tvInfoChet.setText(titleChet + " " + piketstartChet + " -- " + title_finishChet + " " + piketfinishChet + " => " + speedChet + " Выполнено!");
+                                if (start_distance_chet >= (faktEndKm + sumCalculateUslChet) && start_distance_chet <= (faktEndKm + 35 + sumCalculateUslChet) && speedChet == 40) {
+                                    soundPlay(songvipolneno);
+                                }
                             }
+
                             else if (start_distance_chet >= (faktEndKm + sumCalculateUslChet) && start_distance_chet <= (faktEndKm + 80 + sumCalculateUslChet) && speedChet == 50) {
                                 tvNameChet.setText("");
                                 tvRowChet.setText("");
                                 tvSpeedChet.setText("");
                                 tvInfoChet.setText("");
                                 tvInfoChet.setText(titleChet + " " + piketstartChet + " -- " + title_finishChet + " " + piketfinishChet + " => " + speedChet + " Выполнено!");
+                                if (start_distance_chet >= (faktEndKm + sumCalculateUslChet) && start_distance_chet <= (faktEndKm + 35 + sumCalculateUslChet) && speedChet == 50) {
+                                    soundPlay(songvipolneno);
+                                }
                             }
                             else if (start_distance_chet >= (faktEndKm + sumCalculateUslChet) && start_distance_chet <= (faktEndKm + 80 + sumCalculateUslChet) && speedChet == 55) {
                                 tvNameChet.setText("");
@@ -906,6 +920,9 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
                                 tvSpeedChet.setText("");
                                 tvInfoChet.setText("");
                                 tvInfoChet.setText(titleChet + " " + piketstartChet + " -- " + title_finishChet + " " + piketfinishChet + " => " + speedChet + " Выполнено!");
+                                if (start_distance_chet >= (faktEndKm + sumCalculateUslChet) && start_distance_chet <= (faktEndKm + 35 + sumCalculateUslChet) && speedChet == 55) {
+                                    soundPlay(songvipolneno);
+                                }
                             }
                             else if (start_distance_chet >= (faktEndKm + sumCalculateUslChet) && start_distance_chet <= (faktEndKm + 80 + sumCalculateUslChet) && speedChet == 60) {
                                 tvNameChet.setText("");
@@ -913,6 +930,9 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
                                 tvSpeedChet.setText("");
                                 tvInfoChet.setText("");
                                 tvInfoChet.setText(titleChet + " " + piketstartChet + " -- " + title_finishChet + " " + piketfinishChet + " => " + speedChet + " Выполнено!");
+                                if (start_distance_chet >= (faktEndKm + sumCalculateUslChet) && start_distance_chet <= (faktEndKm + 35 + sumCalculateUslChet) && speedChet == 60) {
+                                    soundPlay(songvipolneno);
+                                }
                             }
                             else if (start_distance_chet >= (faktEndKm + sumCalculateUslChet) && start_distance_chet <= (faktEndKm + 80 + sumCalculateUslChet) && speedChet == 65) {
                                 tvNameChet.setText("");
@@ -920,6 +940,9 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
                                 tvSpeedChet.setText("");
                                 tvInfoChet.setText("");
                                 tvInfoChet.setText(titleChet + " " + piketstartChet + " -- " + title_finishChet + " " + piketfinishChet + " => " + speedChet + " Выполнено!");
+                                if (start_distance_chet >= (faktEndKm + sumCalculateUslChet) && start_distance_chet <= (faktEndKm + 35 + sumCalculateUslChet) && speedChet == 65) {
+                                    soundPlay(songvipolneno);
+                                }
                             }
                             else if (start_distance_chet >= (faktEndKm + sumCalculateUslChet) && start_distance_chet <= (faktEndKm + 80 + sumCalculateUslChet) && speedChet == 70) {
                                 tvNameChet.setText("");
@@ -927,6 +950,9 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
                                 tvSpeedChet.setText("");
                                 tvInfoChet.setText("");
                                 tvInfoChet.setText(titleChet + " " + piketstartChet + " -- " + title_finishChet + " " + piketfinishChet + " => " + speedChet + " Выполнено!");
+                                if (start_distance_chet >= (faktEndKm + sumCalculateUslChet) && start_distance_chet <= (faktEndKm + 35 + sumCalculateUslChet) && speedChet == 70) {
+                                    soundPlay(songvipolneno);
+                                }
                             }
                             else if (start_distance_chet >= (faktEndKm + sumCalculateUslChet) && start_distance_chet <= (faktEndKm + 80 + sumCalculateUslChet) && speedChet == 75) {
                                 tvNameChet.setText("");
@@ -934,6 +960,9 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
                                 tvSpeedChet.setText("");
                                 tvInfoChet.setText("");
                                 tvInfoChet.setText(titleChet + " " + piketstartChet + " -- " + title_finishChet + " " + piketfinishChet + " => " + speedChet + " Выполнено!");
+                                if (start_distance_chet >= (faktEndKm + sumCalculateUslChet) && start_distance_chet <= (faktEndKm + 35 + sumCalculateUslChet) && speedChet == 75) {
+                                    soundPlay(songvipolneno);
+                                }
                             }
 
                             // Конец высвечивания выполненного предупреждения на экране, а так же стирания по порядку предупреждения
