@@ -40,4 +40,20 @@
     <string name="dialog_button_usl_nechet">Готово</string>
     <string name="hint_usl_nechet">Ввести</string>
     <string name="text_usl_nechet">Усл. дл.</string>
+
+    <string name="app_in_name">RZD_assistant</string>
+    <string name="text_bottom">Перед использованием приложения, необходимо включить геолокацию</string>
+
+    <string name="btnSignIn">Войти</string>
+    <string name="error_sign_in_window">Ошибка авторизации</string>
+    <string name="error_sign_in_window_pass">Введите пароль более 5-ти символов</string>
+    <string name="error_sign_in_window_email">Введите email</string>
+
+    <string name="btnRegister">Регистрация</string>
+    <string name="error_Register_email">Введите вашу почту</string>
+    <string name="error_Register_name">Введите ваше имя</string>
+    <string name="error_Register_phone">Введите телефон без знака + не менее 11-ти цифр</string>
+    <string name="error_Register_pass">Введите пароль более 5-ти символов</string>
+    <string name="success_Register">Пользователь добавлен</string>
+    <string name="error_Register">Ошибка регистрации или пользователь уже зарегистрирован</string>
 </resources>

@@ -14,5 +14,11 @@
     <color name="tvtTitleNechet_text">#FFFFFF</color>
     <color name="tvtSpeedNechet_text">#3F51B5</color>
     <color name="blue_darck">#2E87F3</color>
+    <color name="text_bottom">#d6e322</color>
+    <color name="ripple_effect">#821a0e</color>
+    <color name="btn_sign_in">#e86051</color>
+    <color name="btn_sign_in_stroke">#913329</color>
+    <color name="btn_register">#ed5934</color>
+    <color name="btn_register_stroke">#ba4629</color>
 
 </resources>

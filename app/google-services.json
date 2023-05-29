@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "160921928659",
+    "project_id": "pzd-assistant-82af2",
+    "storage_bucket": "pzd-assistant-82af2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:160921928659:android:3a7d98eace7b2a5675a526",
+        "android_client_info": {
+          "package_name": "com.example.rzdassistant"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgaCXZcswu8VCYbrPnTgmX8EcyP1Q32hI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
