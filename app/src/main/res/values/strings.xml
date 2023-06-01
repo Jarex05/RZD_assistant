@@ -42,6 +42,7 @@
     <string name="text_usl_nechet">Усл. дл.</string>
 
     <string name="app_in_name">RZD_assistant</string>
+    <string name="app_in_name_email">Вы вошли как</string>
     <string name="text_bottom">Перед использованием приложения, необходимо включить геолокацию</string>
 
     <string name="btnSignIn">Войти</string>
@@ -56,4 +57,10 @@
     <string name="error_Register_pass">Введите пароль более 5-ти символов</string>
     <string name="success_Register">Пользователь добавлен</string>
     <string name="error_Register">Ошибка регистрации или пользователь уже зарегистрирован</string>
+
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="enter_your_email_address">Введите ваш email address</string>
+    <string name="btnReset">Reset</string>
+
+
 </resources>

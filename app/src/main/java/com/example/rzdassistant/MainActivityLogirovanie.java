@@ -3,34 +3,41 @@ package com.example.rzdassistant;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AlertDialogLayout;
 import androidx.appcompat.widget.AppCompatEditText;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rzdassistant.models.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class MainActivityLogirovanie extends AppCompatActivity implements View.OnClickListener {
+public class MainActivityLogirovanie extends AppCompatActivity {
 
-    Button btnSignIn, btnRegister;
+    Button btnSignIn, btnRegister, bStart, bLogaut;
     FirebaseAuth auth;
     FirebaseDatabase db;
     DatabaseReference users;
+    private TextView tvUserEmail;
+    private TextView forgotPassword;
 
     RelativeLayout root;
 
@@ -40,8 +47,13 @@ public class MainActivityLogirovanie extends AppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_logirovanie);
 
-        Button btnSignIn = (Button) findViewById(R.id.btnSignIn);
-        Button btnRegister = (Button) findViewById(R.id.btnRegister);
+        tvUserEmail = findViewById(R.id.tvUserEmail);
+        bStart = findViewById(R.id.bStart);
+        bLogaut = findViewById(R.id.bLogaut);
+        btnSignIn = findViewById(R.id.btnSignIn);
+        btnRegister = findViewById(R.id.btnRegister);
+
+        forgotPassword = findViewById(R.id.forgot_password);
 
         RelativeLayout root = (RelativeLayout) findViewById(R.id.root_element);
 
@@ -60,6 +72,76 @@ public class MainActivityLogirovanie extends AppCompatActivity implements View.O
             @Override
             public void onClick(View view) {
                 showSignInWindow();
+            }
+        });
+
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resetPassword();
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser cUser = auth.getCurrentUser();
+        if (cUser != null) {
+
+            showSigned();
+
+            Toast.makeText(this, "Добро пожаловать", Toast.LENGTH_SHORT).show();
+        } else {
+
+            notSigned();
+        }
+    }
+
+    public void resetPassword() {
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityLogirovanie.this);
+                View dialogView = getLayoutInflater().inflate(R.layout.dialog_forgot, null);
+                EditText emailBox = dialogView.findViewById(R.id.emailBox);
+
+                builder.setView(dialogView);
+                AlertDialog dialog = builder.create();
+
+                dialogView.findViewById(R.id.btnReset).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String userEmail = emailBox.getText().toString();
+
+                        if (TextUtils.isEmpty(userEmail) && !Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()){
+                            Toast.makeText(MainActivityLogirovanie.this, "Введите ваш Email!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        auth.sendPasswordResetEmail(userEmail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(MainActivityLogirovanie.this, "Проверьте ваш Email!", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(MainActivityLogirovanie.this, "Не удалось отправить! Возможно такой Email address не зарегистрирован!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+                dialogView.findViewById(R.id.btnCancel).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+                if (dialog.getWindow() != null) {
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+                }
+                dialog.show();
             }
         });
     }
@@ -86,12 +168,12 @@ public class MainActivityLogirovanie extends AppCompatActivity implements View.O
         dialog.setPositiveButton("Войти", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if(TextUtils.isEmpty(email.getText().toString())) {
+                if (TextUtils.isEmpty(email.getText().toString())) {
                     Toast.makeText(MainActivityLogirovanie.this, R.string.error_sign_in_window_email, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if(pass.getText().toString().length() < 5) {
+                if (pass.getText().toString().length() < 5) {
                     Toast.makeText(MainActivityLogirovanie.this, R.string.error_sign_in_window_pass, Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -100,12 +182,14 @@ public class MainActivityLogirovanie extends AppCompatActivity implements View.O
                         .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                             @Override
                             public void onSuccess(AuthResult authResult) {
-                                startActivity(new Intent(MainActivityLogirovanie.this, MainActivity.class));
-                                finish();
+                                showSigned();
+//                                startActivity(new Intent(MainActivityLogirovanie.this, MainActivity.class));
+//                                finish();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
+                                notSigned();
                                 Toast.makeText(MainActivityLogirovanie.this, R.string.error_sign_in_window, Toast.LENGTH_SHORT).show();
                                 return;
                             }
@@ -116,6 +200,74 @@ public class MainActivityLogirovanie extends AppCompatActivity implements View.O
 
         dialog.show();
     }
+
+    public void onClickSignOut(View view){
+        FirebaseAuth.getInstance().signOut();
+        bStart.setVisibility(View.GONE);
+        tvUserEmail.setVisibility(View.GONE);
+        bLogaut.setVisibility(View.GONE);
+        btnSignIn.setVisibility(View.VISIBLE);
+        btnRegister.setVisibility(View.VISIBLE);
+        forgotPassword.setVisibility(View.VISIBLE);
+    }
+
+    private void showSigned(){
+        FirebaseUser user = auth.getCurrentUser();
+
+        assert user != null;
+        if(user.isEmailVerified()){
+            String userName = "Вы вошли как " + user.getEmail();
+            tvUserEmail.setText(userName);
+            bStart.setVisibility(View.VISIBLE);
+            tvUserEmail.setVisibility(View.VISIBLE);
+            bLogaut.setVisibility(View.VISIBLE);
+            btnSignIn.setVisibility(View.GONE);
+            btnRegister.setVisibility(View.GONE);
+            forgotPassword.setVisibility(View.GONE);
+        }
+        else {
+            bStart.setVisibility(View.GONE);
+            tvUserEmail.setVisibility(View.GONE);
+            bLogaut.setVisibility(View.GONE);
+            btnSignIn.setVisibility(View.VISIBLE);
+            btnRegister.setVisibility(View.VISIBLE);
+            forgotPassword.setVisibility(View.VISIBLE);
+
+            Toast.makeText(MainActivityLogirovanie.this, "Проверьте вашу почту для подтверждения Email адреса", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void onClickStart(View view){
+        Intent i = new Intent(MainActivityLogirovanie.this, MainActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+    private void notSigned(){
+        bStart.setVisibility(View.GONE);
+        tvUserEmail.setVisibility(View.GONE);
+        bLogaut.setVisibility(View.GONE);
+        btnSignIn.setVisibility(View.VISIBLE);
+        btnRegister.setVisibility(View.VISIBLE);
+        forgotPassword.setVisibility(View.VISIBLE);
+    }
+
+    private void sendEmailVerification(){
+        FirebaseUser user = auth.getCurrentUser();
+        assert user != null;
+        user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(MainActivityLogirovanie.this, "Проверьте вашу почту для подтверждения Email адреса", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MainActivityLogirovanie.this, "Send email failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
 
 
@@ -181,6 +333,8 @@ public class MainActivityLogirovanie extends AppCompatActivity implements View.O
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void unused) {
+                                                showSigned();
+                                                sendEmailVerification();
                                                 Toast.makeText(MainActivityLogirovanie.this, R.string.success_Register, Toast.LENGTH_SHORT).show();
 
                                             }
@@ -189,6 +343,7 @@ public class MainActivityLogirovanie extends AppCompatActivity implements View.O
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
+                                notSigned();
                                 Toast.makeText(MainActivityLogirovanie.this, R.string.error_Register, Toast.LENGTH_LONG).show();
 
                             }
@@ -198,10 +353,5 @@ public class MainActivityLogirovanie extends AppCompatActivity implements View.O
         });
 
         dialog.show();
-    }
-
-    @Override
-    public void onClick(View view) {
-
     }
 }
