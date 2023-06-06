@@ -3,18 +3,18 @@ package com.example.rzdassistant;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AlertDialogLayout;
 import androidx.appcompat.widget.AppCompatEditText;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -32,14 +32,30 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivityLogirovanie extends AppCompatActivity {
 
-    Button btnSignIn, btnRegister, bStart, bLogaut;
+    private SharedPreferences prefChetLog;
+    private final String save_key_chet_log = "save_key_chet_log";
+    private SharedPreferences prefNechetLog;
+    private final String save_key_nechet_log = "save_key_nechet_log";
+
+    Button btnSignIn, btnRegister, bStartChet, bLogaut, bStartNechet;
     FirebaseAuth auth;
     FirebaseDatabase db;
     DatabaseReference users;
     private TextView tvUserEmail;
     private TextView forgotPassword;
 
+    private int chet;
+    private int chet2;
+
+    private int chetIsNechet;
+
+    private int nechetIsChet;
+    private int nechet;
+    private int nechet2;
+
     RelativeLayout root;
+
+    final String LOG_TAG = "myLogs";
 
 
     @Override
@@ -47,8 +63,34 @@ public class MainActivityLogirovanie extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_logirovanie);
 
+        int chet1 = getIntent().getIntExtra("chet1", 0);
+        chet = chet1;
+        chet2 = chet;
+        Log.d(LOG_TAG, "Данные полученные с чётного активити  = " + chet);
+
+        prefChetLog = getSharedPreferences("chet", MODE_PRIVATE);
+        chet2 = Integer.parseInt(prefChetLog.getString("save_key_chet_log", "0"));
+
+        int nechet1 = getIntent().getIntExtra("nechet1", 0);
+        nechet = nechet1;
+        nechet2 = nechet;
+        Log.d(LOG_TAG, "Данные полученные с нечётного активити  = " + nechet);
+
+        prefNechetLog = getSharedPreferences("nechet", MODE_PRIVATE);
+        nechet2 = Integer.parseInt(prefNechetLog.getString("save_key_nechet_log", "0"));
+
+        int chet2 = getIntent().getIntExtra("nechet2", 0);
+        chetIsNechet = chet2;
+        Log.d(LOG_TAG, "Данные полученные с Нечётного активити для передачи чётному  = " + chetIsNechet);
+
+        int nechet2 = getIntent().getIntExtra("chet2", 0);
+        nechetIsChet = nechet2;
+        Log.d(LOG_TAG, "Данные полученные с Чётного активити для передачи нечётному  = " + nechetIsChet);
+
+
         tvUserEmail = findViewById(R.id.tvUserEmail);
-        bStart = findViewById(R.id.bStart);
+        bStartChet = findViewById(R.id.bStartChet);
+        bStartNechet = findViewById(R.id.bStartNechet);
         bLogaut = findViewById(R.id.bLogaut);
         btnSignIn = findViewById(R.id.btnSignIn);
         btnRegister = findViewById(R.id.btnRegister);
@@ -82,6 +124,7 @@ public class MainActivityLogirovanie extends AppCompatActivity {
             }
         });
     }
+
 
     @Override
     protected void onStart() {
@@ -203,7 +246,8 @@ public class MainActivityLogirovanie extends AppCompatActivity {
 
     public void onClickSignOut(View view){
         FirebaseAuth.getInstance().signOut();
-        bStart.setVisibility(View.GONE);
+        bStartChet.setVisibility(View.GONE);
+        bStartNechet.setVisibility(View.GONE);
         tvUserEmail.setVisibility(View.GONE);
         bLogaut.setVisibility(View.GONE);
         btnSignIn.setVisibility(View.VISIBLE);
@@ -216,9 +260,11 @@ public class MainActivityLogirovanie extends AppCompatActivity {
 
         assert user != null;
         if(user.isEmailVerified()){
+
             String userName = "Вы вошли как " + user.getEmail();
             tvUserEmail.setText(userName);
-            bStart.setVisibility(View.VISIBLE);
+            bStartChet.setVisibility(View.VISIBLE);
+            bStartNechet.setVisibility(View.VISIBLE);
             tvUserEmail.setVisibility(View.VISIBLE);
             bLogaut.setVisibility(View.VISIBLE);
             btnSignIn.setVisibility(View.GONE);
@@ -226,7 +272,8 @@ public class MainActivityLogirovanie extends AppCompatActivity {
             forgotPassword.setVisibility(View.GONE);
         }
         else {
-            bStart.setVisibility(View.GONE);
+            bStartChet.setVisibility(View.GONE);
+            bStartNechet.setVisibility(View.GONE);
             tvUserEmail.setVisibility(View.GONE);
             bLogaut.setVisibility(View.GONE);
             btnSignIn.setVisibility(View.VISIBLE);
@@ -238,13 +285,31 @@ public class MainActivityLogirovanie extends AppCompatActivity {
     }
 
     public void onClickStart(View view){
-        Intent i = new Intent(MainActivityLogirovanie.this, MainActivity.class);
-        startActivity(i);
+        Intent iChet = new Intent(MainActivityLogirovanie.this, MainActivity.class);
+        startActivity(iChet.putExtra("Chet", chet));
+        startActivity(iChet.putExtra("Nechet", nechet));
+        startActivity(iChet.putExtra("chetIsNechet", chetIsNechet));
+        SharedPreferences.Editor editchet = prefChetLog.edit();
+        editchet.putString("save_key_chet_log", String.valueOf(chet2));
+        editchet.apply();
+        finish();
+    }
+
+    public void onClickBtnNechet(View view)
+    {
+        Intent iNechet = new Intent(MainActivityLogirovanie.this, MainActivityNechet.class);
+        startActivity(iNechet.putExtra("Nechet", nechet));
+        startActivity(iNechet.putExtra("Chet", chet));
+        startActivity(iNechet.putExtra("nechetIsChet", nechetIsChet));
+        SharedPreferences.Editor editnechet = prefNechetLog.edit();
+        editnechet.putString("save_key_nechet_log", String.valueOf(nechet2));
+        editnechet.apply();
         finish();
     }
 
     private void notSigned(){
-        bStart.setVisibility(View.GONE);
+        bStartChet.setVisibility(View.GONE);
+        bStartNechet.setVisibility(View.GONE);
         tvUserEmail.setVisibility(View.GONE);
         bLogaut.setVisibility(View.GONE);
         btnSignIn.setVisibility(View.VISIBLE);

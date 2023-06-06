@@ -4,12 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,7 +27,9 @@ import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -36,6 +43,8 @@ import com.example.rzdassistant.db.OnDataReceived;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LocListenerInterfaceChet, OnDataReceived {
+
+//    Button btnStart, btnStop;
 
     private SharedPreferences prefChet;
     private SharedPreferences prefChetUsl;
@@ -55,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
 
     private int progressBarChet;
     private int start_distance_chet = 0;
+    private int getStart_distance_chet2;
     public int i;
     public int j;
     public int km;
@@ -89,18 +99,64 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
 
     private MediaPlayer ogr15, ogr25, ogr40, ogr50, ogr55, ogr60, ogr65, ogr70, ogr75, probatormozov, probatormozov2, ojevlenie, voice15, voice25, voice40, voice50, voice55, voice60, voice65, voice70, voice75, voiceprev, tokopriemniki, tokopriemniki2, songvipolneno;
 
-    public MainActivity() {
-    }
+    private int chet2;
+
+    final String LOG_TAG = "myLogs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(LOG_TAG, "Активно = " + savedInstanceState);
         init();
     }
 
     private void init()
     {
+
+
+        NotificationChannel channel = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            channel = new NotificationChannel("Test_Channel",
+                    "Test Description",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+
+            Intent intent = new Intent(this, MainActivity.class);
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+            Notification notification = new NotificationCompat.Builder(this, "Test_Channel")
+                    .setContentTitle("RZD assistant")
+                    .setContentText("RZD assistant продолжает работу")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
+                    .build();
+
+            notificationManager.notify(101, notification);
+        }
+
+
+//        Intent intent = new Intent(this, MyServiceChet.class);
+//        startService(intent.putExtra("age", 500));
+
+        int Chet = getIntent().getIntExtra("Chet", 0);
+        start_distance_chet = Chet;
+        Log.d(LOG_TAG, "Данные полученные с активити логирования  = " + start_distance_chet);
+
+        int Chet1 = getIntent().getIntExtra("Nechet", 0);
+        chet2 = Chet1;
+        Log.d(LOG_TAG, "Данные полученные с активити логирования для возвращения нечётному активити  = " + chet2);
+
+        int Chet3 = getIntent().getIntExtra("chetIsNechet", 0);
+        getStart_distance_chet2 = Chet3;
+        Log.d(LOG_TAG, "Данные полученные с активити логирования chetIsNechet  = " + getStart_distance_chet2);
+        if (start_distance_chet == 0) {
+            start_distance_chet = getStart_distance_chet2;
+        }
+
         myDbManagerChet = new MyDbManagerChet(this);
         rcViewChet = findViewById(R.id.rcViewChet);
         mainAdapterChet = new MainAdapterChet(this);
@@ -116,11 +172,14 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
         prefChet = getSharedPreferences("chet", MODE_PRIVATE);
         prefChetUsl = getSharedPreferences("chetusl", MODE_PRIVATE);
         tvDistanceChet = findViewById(R.id.tvDistanceChet);
-        tvDistanceChet.setText(prefChet.getString("save_key_chet", "0"));
-        start_distance_chet = Integer.parseInt(prefChet.getString("save_key_chet", "0"));
+//        tvDistanceChet.setText(prefChet.getString("save_key_chet", "0"));
+//        getStart_distance_chet2 = Integer.parseInt(prefChet.getString("save_key_chet", "0"));
+//        start_distance_chet = Integer.parseInt(prefChet.getString("save_key_chet", "0"));
         tvUslChet = findViewById(R.id.tvUslChet);
         tvUslChet.setText(prefChetUsl.getString("save_key_chet_usl", "0"));
         uslDlChet = Integer.parseInt(prefChetUsl.getString("save_key_chet_usl", "0"));
+
+
 
         tvVelocityChet = findViewById(R.id.tvVelocityChet);
 
@@ -167,6 +226,14 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
 
         checkPermissions();
     }
+
+//    public void onClickStart(View view) {
+//        startService(new Intent(this, MyServiceChet.class));
+//    }
+//
+//    public void onClickStop(View view) {
+//        stopService(new Intent(this, MyServiceChet.class));
+//    }
 
     // Начало условной длины
 
@@ -220,6 +287,10 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
                     public void onClick(DialogInterface dialog, int which) {
                         AlertDialog chet = (AlertDialog) dialog;
                         EditText edschet = chet.findViewById(R.id.edStartChet);
+                        tvInfoChet.setText("");
+                        tvNameChet.setText("");
+                        tvRowChet.setText("");
+                        tvSpeedChet.setText("");
                         if(edschet != null){
                             if(!edschet.getText().toString().equals(""))setDistanceStartChet(edschet.getText().toString());
                         }
@@ -944,7 +1015,7 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
         }).start();
 
 
-            int q = 1001, q1 = 1101, q2 = 1201, q3 = 1301, q4 = 1401, q5 = 1501, q6 = 1601, q7 = 1701, q8 = 1801, q9 = 1901, w = 1099, w1 = 1199, w2 = 1299, w3 = 1399, w4 = 1499, w5 = 1599, w6 = 1699, w7 = 1799, w8 = 1899, w9 = 1999, kme = 2, pke = 1;
+            int q = 1000, q1 = 1100, q2 = 1200, q3 = 1300, q4 = 1400, q5 = 1500, q6 = 1600, q7 = 1700, q8 = 1800, q9 = 1900, w = 1100, w1 = 1200, w2 = 1300, w3 = 1400, w4 = 1500, w5 = 1600, w6 = 1700, w7 = 1800, w8 = 1900, w9 = 2000, kme = 2, pke = 1;
             while (q < 9999999) {
                 q = q + 1000;
                 q1 = q1 + 1000;
@@ -1049,11 +1120,12 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
             tvDistanceChet.setText(String.valueOf(start_distance_chet));
             tvVelocityChet.setText(String.valueOf(Math.round((locChet.getSpeed() / 1000) * 3600)));
 
-        SharedPreferences.Editor edit = prefChet.edit();
+
+//        SharedPreferences.Editor edit = prefChet.edit();
         SharedPreferences.Editor editorusl = prefChetUsl.edit();
-        edit.putString("save_key_chet", tvDistanceChet.getText().toString());
+//        edit.putString("save_key_chet", tvDistanceChet.getText().toString());
         editorusl.putString("save_key_chet_usl", tvUslChet.getText().toString());
-        edit.apply();
+//        edit.apply();
         editorusl.apply();
 
     }
@@ -1107,7 +1179,6 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
                 myDbManagerChet.getFromDbChet(MainActivity.this);
             }
         });
-//        mainAdapterChet.updateAdapterChet(myDbManagerChet.getFromDbChet());
     }
 
 
@@ -1118,8 +1189,11 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
 
     public void onClickBtnNechet(View view)
     {
-        Intent iChet = new Intent(MainActivity.this, MainActivityNechet.class);
-        startActivity(iChet);
+
+        Intent iChet = new Intent(MainActivity.this, MainActivityLogirovanie.class);
+        startActivity(iChet.putExtra("chet1", start_distance_chet));
+        startActivity(iChet.putExtra("chet2", chet2));
+        start_distance_chet = 0;
         finish();
     }
 
@@ -1162,14 +1236,5 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
         });
     }
 
-//    public void onClickSave(View view) {
-//        SharedPreferences.Editor edit = pref.edit();
-//        edit.putString("save_key", tvDistanceChet.getText().toString());
-//        edit.apply();
-//    }
 
-//    public void onClickGet(View view) {
-//        tvStartChet.setText(pref.getString("save_key", "Отправление с чётным"));
-//        start_distance_chet = Integer.parseInt(pref.getString("save_key", "0"));
-//    }
 }

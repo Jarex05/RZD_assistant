@@ -38,14 +38,24 @@
             android:textSize="20sp" />
 
         <Button
-            android:id="@+id/bStart"
+            android:id="@+id/bStartChet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
             android:onClick="onClickStart"
-            android:text="Начать"
+            android:text="Чётный"
             android:textSize="10sp"
-            tools:ignore="OnClick,UsingOnClickInXml" />
+            tools:ignore="HardcodedText,OnClick,UsingOnClickInXml" />
+
+        <Button
+            android:id="@+id/bStartNechet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:onClick="onClickBtnNechet"
+            android:text="Нечётный"
+            android:textSize="10sp"
+            tools:ignore="HardcodedText,OnClick,UsingOnClickInXml" />
 
         <Button
             android:id="@+id/bLogaut"
@@ -55,7 +65,7 @@
             android:onClick="onClickSignOut"
             android:text="Выход"
             android:textSize="7sp"
-            tools:ignore="OnClick" />
+            tools:ignore="OnClick,UsingOnClickInXml" />
 
     </LinearLayout>
 

@@ -40,7 +40,7 @@ import java.util.List;
 
 public class MainActivityNechet extends AppCompatActivity implements LocListenerInterfaceNechet, OnDataReceivedNechet {
 
-    private SharedPreferences prefNechet;
+    private static SharedPreferences prefNechet;
     private SharedPreferences prefNechetUsl;
     private final String save_key_nechet = "save_key_nechet";
     private final String save_key_nechet_usl = "save_key_nechet_usl";
@@ -57,6 +57,7 @@ public class MainActivityNechet extends AppCompatActivity implements LocListener
     private int progressBarNechet;
     private int start_distance_chet;
     private int start_distance_nechet = 0;
+    private int getStart_distance_nechet2;
     private int distanceStationStart = 0;
     private int distanceStationFinish = 9999999;
 //    private int distanceStationStart = 6904000;
@@ -85,6 +86,10 @@ public class MainActivityNechet extends AppCompatActivity implements LocListener
 
     private MediaPlayer ogr15, ogr25, ogr40, ogr50, ogr55, ogr60, ogr65, ogr70, ogr75, probatormozov, probatormozov2, ojevlenie, voice15, voice25, voice40, voice50, voice55, voice60, voice65, voice70, voice75, voiceprev, tokopriemniki, tokopriemniki2, songvipolneno;
 
+    final String LOG_TAG = "myLogs";
+
+    private int nechet2;
+
     DBHelperNechet dbHelperNechet;
 
     @Override
@@ -96,6 +101,22 @@ public class MainActivityNechet extends AppCompatActivity implements LocListener
 
     private void init()
     {
+
+        int Nechet = getIntent().getIntExtra("Nechet", 0);
+        start_distance_nechet = Nechet;
+        Log.d(LOG_TAG, "Данные полученные с активити логирования  = " + start_distance_nechet);
+        int Nechet1 = getIntent().getIntExtra("Chet", 0);
+        nechet2 = Nechet1;
+        Log.d(LOG_TAG, "Данные полученные с активити логирования для возвращения чётному активити  = " + nechet2);
+
+        int Nechet3 = getIntent().getIntExtra("nechetIsChet", 0);
+        getStart_distance_nechet2 = Nechet3;
+        Log.d(LOG_TAG, "Данные полученные с активити логирования nechetIsChet  = " + getStart_distance_nechet2);
+        if (start_distance_nechet == 0) {
+            start_distance_nechet = getStart_distance_nechet2;
+        }
+
+
         myDbManagerNechet = new MyDbManagerNechet(this);
         rcViewNechet = findViewById(R.id.rcViewNechet);
         mainAdapterNechet = new MainAdapterNechet(this);
@@ -111,8 +132,8 @@ public class MainActivityNechet extends AppCompatActivity implements LocListener
         prefNechet = getSharedPreferences("nechet", MODE_PRIVATE);
         prefNechetUsl = getSharedPreferences("nechetusl", MODE_PRIVATE);
         tvDistanceNechet = findViewById(R.id.tvDistanceNechet);
-        tvDistanceNechet.setText(prefNechet.getString("save_key_nechet", "0"));
-        start_distance_nechet = Integer.parseInt(prefNechet.getString("save_key_nechet", "0"));
+//        tvDistanceNechet.setText(prefNechet.getString("save_key_nechet", "0"));
+//        start_distance_nechet = Integer.parseInt(prefNechet.getString("save_key_nechet", "0"));
         tvUslNechet = findViewById(R.id.tvUslNechet);
         tvUslNechet.setText(prefNechetUsl.getString("save_key_nechet_usl", "0"));
         uslDlNechet = Integer.parseInt(prefNechetUsl.getString("save_key_nechet_usl", "0"));
@@ -222,6 +243,10 @@ public class MainActivityNechet extends AppCompatActivity implements LocListener
             public void onClick(DialogInterface dialog, int which) {
                 AlertDialog nechet = (AlertDialog) dialog;
                 EditText edsnechet = nechet.findViewById(R.id.edStartNechet);
+                tvInfoNechet.setText("");
+                tvNameNechet.setText("");
+                tvRowNechet.setText("");
+                tvSpeedNechet.setText("");
                 if(edsnechet != null){
                     if(!edsnechet.getText().toString().equals(""))setDistanceStartNechet(edsnechet.getText().toString());
                 }
@@ -958,7 +983,7 @@ public class MainActivityNechet extends AppCompatActivity implements LocListener
         }).start();
 
 
-            int s = 9999001, s1 = 9999101, s2 = 9999201, s3 = 9999301, s4 = 9999401, s5 = 9999501, s6 = 9999601, s7 = 9999701, s8 = 9999801, s9 = 9999901, d = 9999099, d1 = 9999199, d2 = 9999299, d3 = 9999399, d4 = 9999499, d5 = 9999599, d6 = 9999699, d7 = 9999799, d8 = 9999899, d9 = 9999999, kmf = 10000, pkf = 1;
+            int s = 9999000, s1 = 9999100, s2 = 9999200, s3 = 9999300, s4 = 9999400, s5 = 9999500, s6 = 9999600, s7 = 9999700, s8 = 9999800, s9 = 9999900, d = 9999100, d1 = 9999200, d2 = 9999300, d3 = 9999400, d4 = 9999500, d5 = 9999600, d6 = 9999700, d7 = 9999800, d8 = 9999900, d9 = 10000000, kmf = 10000, pkf = 1;
             while (d9 > 0) {
 
                 d9 = d9 - 1000;
@@ -1070,11 +1095,11 @@ public class MainActivityNechet extends AppCompatActivity implements LocListener
         tvDistanceNechet.setText(String.valueOf(start_distance_nechet));
         tvVelocityNechet.setText(String.valueOf(Math.round((locNechet.getSpeed() / 1000) * 3600)));
 
-        SharedPreferences.Editor edit = prefNechet.edit();
+//        SharedPreferences.Editor edit = prefNechet.edit();
         SharedPreferences.Editor editusl = prefNechetUsl.edit();
-        edit.putString("save_key_nechet", tvDistanceNechet.getText().toString());
+//        edit.putString("save_key_nechet", tvDistanceNechet.getText().toString());
         editusl.putString("save_key_nechet_usl", tvUslNechet.getText().toString());
-        edit.apply();
+//        edit.apply();
         editusl.apply();
 
     }
@@ -1133,8 +1158,10 @@ public class MainActivityNechet extends AppCompatActivity implements LocListener
 
     public void onClickBtnChet(View view)
     {
-        Intent iNechet = new Intent(MainActivityNechet.this, MainActivity.class);
-        startActivity(iNechet);
+        Intent iNechet = new Intent(MainActivityNechet.this, MainActivityLogirovanie.class);
+        startActivity(iNechet.putExtra("nechet1", start_distance_nechet));
+        startActivity(iNechet.putExtra("nechet2", nechet2));
+        start_distance_nechet = 0;
         finish();
     }
 

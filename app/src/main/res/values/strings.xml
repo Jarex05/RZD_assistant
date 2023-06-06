@@ -67,4 +67,13 @@
     <string name="btnGet">G</string>
 
 
+
+
+    <string name="app_name_services">Сервис</string>
+    <string name="hello_world">Hello_world</string>
+    <string name="action_settings">Settings</string>
+    <string name="start">Start Service</string>
+    <string name="stop">Stop Service</string>
+
+
 </resources>
